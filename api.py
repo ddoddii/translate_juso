@@ -3,7 +3,8 @@ from typing import List, Optional, Union
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 import uvicorn
-from juso_api_eng import translate_juso
+from juso_api_kor import find_juso_kor
+from main import fin_juso_model
 
 app = FastAPI(
     title = "CJ API by DSL"
@@ -50,16 +51,21 @@ async def process_request(request: ClientRequest):
     body_data_list = []
     for individual_request in request.requestList:
         request_address = individual_request.requestAddress
-        translated_juso = translate_juso(request_address)
-        if not translated_juso:  
+        juso_model_output = fin_juso_model(request_address)
+        real_juso = find_juso_kor(juso_model_output)
+        if not real_juso:  
             # Return the FailureResponse
-            failure_header = Header(RESULT_CODE=ResultCode.FAILURE, RESULT_MSG=f"seq {individual_request.seq} is failed to transfer")
-            raise HTTPException(status_code=400, detail={"HEADER": failure_header.dict()})
-        
-        body_data_list.append(BodyData(seq=individual_request.seq, resultAddress=translated_juso))
+            """ failure_header = Header(RESULT_CODE=ResultCode.FAILURE, RESULT_MSG=f"seq {individual_request.seq} is failed to transfer")
+            raise HTTPException(status_code=400, detail={"HEADER": failure_header.dict()}) """
+            real_juso = '답 없음'
+            body_data_list.append(BodyData(seq=individual_request.seq, resultAddress=real_juso))
+        else:
+
+            body_data_list.append(BodyData(seq=individual_request.seq, resultAddress=real_juso))
         
     response_header = Header(RESULT_CODE=ResultCode.SUCCESS, RESULT_MSG="Success")  # Sample header
     return SuccessResponse(HEADER=response_header, Body=body_data_list)
 
 if __name__ == "__main__":
+    #uvicorn.run("api:app",host="15.165.156.212",port=5000,log_level='info')
     uvicorn.run("api:app",host="127.0.0.1",port=5000,log_level='info')
