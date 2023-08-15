@@ -39,7 +39,7 @@ class BodyData(BaseModel):
     
 class SuccessResponse(BaseModel):
     HEADER : Header
-    Body : List[BodyData]
+    BODY : List[BodyData]
     
     
 class FailureResponse(BaseModel):
@@ -66,8 +66,7 @@ async def process_request(request: ClientRequest):
             body_data_list.append(BodyData(seq=individual_request.seq, resultAddress=real_juso))
         
     response_header = Header(RESULT_CODE=ResultCode.SUCCESS, RESULT_MSG="Success")  # Sample header
-    return SuccessResponse(HEADER=response_header, Body=body_data_list)
+    return SuccessResponse(HEADER=response_header, BODY=body_data_list)
 
 if __name__ == "__main__":
-    #uvicorn.run("api:app",host="15.165.156.212",port=5000,log_level='info')
-    uvicorn.run("api:app",host="127.0.0.1",port=5000,log_level='info')
+    uvicorn.run("api:app",host="3.37.39.13",port=8000,log_level='info')
