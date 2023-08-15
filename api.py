@@ -46,7 +46,7 @@ class FailureResponse(BaseModel):
     HEADER : Header
 
 
-@app.post('/')
+@app.post('/request')
 async def process_request(request: ClientRequest):
     body_data_list = []
     for individual_request in request.requestList:
