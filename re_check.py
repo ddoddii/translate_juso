@@ -10,7 +10,7 @@ def extract_address_info(address):
     road_name = re.findall(r'(\S+(?:-ro|-daero|-gil)|(?:로|ro|길)\b)', address)
     
     #gil_name = re.findall(r'\s*([^,\s]+(?:gil|길))', address)  
-    city_name = re.findall(r'(\S+(?:구|gu)\b|(\S+(?:-gu)))', address)
+    city_name = re.findall(r'(\S+(?:구|gu|시|si|군|gun)\b|(\S+(?:-gu|-si|-gun)))', address)
     #si_name = re.findall(r',\s*([^,\s]+(?:-si|시))', address, re.IGNORECASE) 
     #si_name = re.findall(r'\s*(\S+(?:-si|시))', address, re.IGNORECASE)
     #province_name = re.findall(r',\s*(\S+(?:-do|도)\b)', address)

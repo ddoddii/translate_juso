@@ -51,16 +51,18 @@ async def process_request(request: ClientRequest):
     body_data_list = []
     for individual_request in request.requestList:
         request_address = individual_request.requestAddress
-        juso_model_output = fin_juso_model(request_address)
-        real_juso = find_juso_kor(juso_model_output)
+        juso_model_output, yes_or_no = fin_juso_model(request_address)
+        real_juso, num = find_juso_kor(juso_model_output)
         if not real_juso:  
             # Return the FailureResponse
             """ failure_header = Header(RESULT_CODE=ResultCode.FAILURE, RESULT_MSG=f"seq {individual_request.seq} is failed to transfer")
             raise HTTPException(status_code=400, detail={"HEADER": failure_header.dict()}) """
             real_juso = '답 없음'
             body_data_list.append(BodyData(seq=individual_request.seq, resultAddress=real_juso))
+        elif yes_or_no and num>1:
+            real_juso = '답 없음'
+            body_data_list.append(BodyData(seq=individual_request.seq, resultAddress=real_juso))
         else:
-
             body_data_list.append(BodyData(seq=individual_request.seq, resultAddress=real_juso))
         
     response_header = Header(RESULT_CODE=ResultCode.SUCCESS, RESULT_MSG="Success")  # Sample header
