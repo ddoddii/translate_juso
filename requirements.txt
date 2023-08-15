@@ -1,0 +1,10 @@
+fastapi==0.101.1
+pandas==1.5.2
+pydantic==2.1.1
+PyYAML==6.0.1
+Requests==2.31.0
+starlette==0.27.0
+torch==2.0.1
+transformers==4.31.0
+uvicorn==0.23.2
+xmltodict==0.13.0
