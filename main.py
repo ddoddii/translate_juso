@@ -1,11 +1,12 @@
 import time
+import argparse
 import logging
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import pandas as pd
 import re
 from re_check import extract_address_info
-
+import csv
 
 
         
@@ -53,10 +54,12 @@ def check_juso(ori_input, model_output):
     if re_road_name :
         result = model_output
     else:
-        result = re.sub(r'\s*(\S+(로|대로|-ro|-daero)\b)','',model_output)
+        result = re.sub(r'(\S+(?:로|대로|길)\b)','',model_output)
 
-
-    if not re_city_name :
+    
+    if re_city_name :
+        pass
+    else:
         result = re.sub(r'\s*(\S+(?:구)\b|\s*(\S+(?:gu)))','',result)
         
     if re_road_name and re_city_name:
@@ -75,16 +78,15 @@ def fin_juso_model(input):
 
 if __name__ == '__main__':
             
-    #input_text = list(pd.read_csv('sample_data.csv')['input'].str.replace(pat=r'[^\w\s()-]', repl=r'', regex=True))
-    input_text = "111 Haneul-gil Gangseo-gu Seoul Domestic Parking 대기 Room"
+    #input_text = list(pd.read_csv('sample_data.csv')['input'].str.replace(pat=r'[^\w\s%()-]', repl=r'', regex=True))
+    input_text = "Cheonho-daeroRepublic of Korea B12129 Seoul (Yongdu-dong)"
 
     start = time.time()
     output = juso_model(input_text)
-    checked_juso = fin_juso_model(input_text)
-    re_road_name, re_city_name, result = check_juso(input_text, output)
-    print(re_road_name, re_city_name)
-    print(result)
-    #print(checked_juso)
+    checked_juso = check_juso(input_text , output)
+    
+    print(output)
+    print(checked_juso)
     end = time.time()
     sec = end - start
     print(f'{sec} sec')
