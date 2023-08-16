@@ -29,7 +29,7 @@ logging.basicConfig(filename='myinfo.log',level=logging.INFO)
 
 def juso_model(input_text):
     device = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
-    model_ckpt = r"C:\Users\User\Desktop\CJ_API\model"
+    model_ckpt = "./model"
     model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt)
     tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
     
