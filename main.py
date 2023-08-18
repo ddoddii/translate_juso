@@ -28,14 +28,14 @@ logging.basicConfig(filename='myinfo.log',level=logging.INFO)
 
 
 def juso_model(input_text):
-    device = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     model_ckpt = "./model"
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt)
+    model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
     
     text_cleaned = re.sub(r'[^\w\s()-]', '', input_text)
     
-    inputs = tokenizer(text_cleaned, return_tensors="pt", max_length=64, padding='longest')
+    inputs = tokenizer(text_cleaned, return_tensors="pt", max_length=64, padding='longest').to(device)
     koreans = model.generate(
         **inputs,
         max_length=64,
