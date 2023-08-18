@@ -31,7 +31,7 @@ def find_juso_kor(text):
     url = "https://business.juso.go.kr/addrlink/addrLinkApiJsonp.do"
 
     # Parameters  
-    confmKey = "devU01TX0FVVEgyMDIzMDcxODE0MDUxNDExMzkzODk="
+    confmKey = "devU01TX0FVVEgyMDIzMDgxODEyMjcwMDExNDAyODM="
     currentPage = 1
     countPerPage = 1
     keyword = text
