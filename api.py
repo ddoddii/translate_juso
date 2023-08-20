@@ -10,8 +10,8 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from re_check import extract_address_info
 import re
 
-device = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
-model_ckpt = r"C:\Users\User\Desktop\CJ_API\model"
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model_ckpt = './model'
 model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 
