@@ -25,17 +25,16 @@ logger.addHandler(stream_handler) ## 핸들러 등록
 # log file 에 로그들을 모두 저장하고 싶을 때
 logging.basicConfig(filename='myinfo.log',level=logging.INFO)
 
+device = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
+model_ckpt = r"C:\Users\User\Desktop\CJ_API\model"
+model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt).to(device)
+tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 
 
-def juso_model(input_text):
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    model_ckpt = "./model"
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt).to(device)
-    tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
-    
-    text_cleaned = re.sub(r'[^\w\s()-]', '', input_text)
-    
-    inputs = tokenizer(text_cleaned, return_tensors="pt", max_length=64, padding='longest').to(device)
+def juso_model(input_text):    
+    text_cleaned = re.sub(r'[^\w\s()%-]', '', input_text)
+
+    inputs = tokenizer(text_cleaned, return_tensors="pt", max_length=64, padding='longest')
     koreans = model.generate(
         **inputs,
         max_length=64,
@@ -56,17 +55,17 @@ def check_juso(ori_input, model_output):
     else:
         result = ''
 
+    if re_city_name :
+        pass
+    else:
+        yes_or_no = True
+        result = re.sub(r'\s*(\S+(?:구|군)\b)| \S+(?:시)\b','',result)
+
     if re_road_name :
         result = model_output
     else:
         yes_or_no = True
         result = re.sub(r'(\S+(?:로|대로|길)\b)','',model_output)
-    
-    if re_city_name :
-        pass
-    else:
-        yes_or_no = True
-        result = re.sub(r'\s*(\S+(?:구)\b|\s*(\S+(?:gu)))','',result)
         
     if re_road_name and re_city_name:
         parts = model_output.split()
@@ -86,13 +85,14 @@ def fin_juso_model(input):
 if __name__ == '__main__':
             
     # input_text = list(pd.read_csv('sample_data.csv')['input'].str.replace(pat=r'[^\w\s%()-]', repl=r'', regex=True))
-    input_text = "359 Jongno-gu Jongno-gu Seoul 101동"
+    input_text = "Daepo Super 4-13 Daecheong-ro 7-beon-gil Daecheong-myeon  Incheon"
 
     start = time.time()
-    output = juso_model(input_text)
-    checked_juso, yes_or_no = check_juso(input_text , output)
+    model_output = juso_model(input_text)
+    checked_juso, yes_or_no = check_juso(input_text, model_output)
     
-    print(output)
+    print(input_text)
+    print(model_output)
     print(checked_juso, yes_or_no)
     end = time.time()
     sec = end - start
