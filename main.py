@@ -25,9 +25,9 @@ logger.addHandler(stream_handler) ## 핸들러 등록
 # log file 에 로그들을 모두 저장하고 싶을 때
 logging.basicConfig(filename='myinfo.log',level=logging.INFO)
 
-device = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
+#evice = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
 model_ckpt = "./model"
-model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt).to(device)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt)
 tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 
 
