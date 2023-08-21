@@ -5,14 +5,13 @@ from pydantic import BaseModel, Field
 import uvicorn
 from juso_api_kor import find_juso_kor
 # from main import fin_juso_model
-import torch
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from re_check import extract_address_info
 import re
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+#device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model_ckpt = './model'
-model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt).to(device)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt)
 tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 
 def juso_model(input_text):    

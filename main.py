@@ -26,7 +26,7 @@ logger.addHandler(stream_handler) ## 핸들러 등록
 logging.basicConfig(filename='myinfo.log',level=logging.INFO)
 
 device = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
-model_ckpt = r"C:\Users\User\Desktop\CJ_API\model"
+model_ckpt = "./model"
 model = AutoModelForSeq2SeqLM.from_pretrained(model_ckpt).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 
